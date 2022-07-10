@@ -10,7 +10,7 @@ import net.kunmc.lab.configlib.value.collection.ListValue
 import org.bukkit.Location
 import org.bukkit.plugin.Plugin
 
-class TNTRunConfig(plugin: Plugin) : SimpleQueueConfig, BaseConfig(plugin, true) {
+class TNTRunConfig(plugin: Plugin) : SimpleQueueConfig {
     override val joinLocation: LocationValue = LocationValue()
     override val cancelLocation: LocationValue = LocationValue()
     override val minPlayerCount: IntegerValue = IntegerValue(3)

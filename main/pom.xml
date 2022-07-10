@@ -62,28 +62,27 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
+                        <id>copy-installed</id>
+                        <phase>install</phase>
                         <goals>
-                            <goal>compile</goal>
+                            <goal>copy</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>testCompile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>${project.packaging}</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>../server/plugins</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
             </plugin>
         </plugins>
         <resources>
@@ -117,9 +116,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.papermc.paper</groupId>
+            <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -147,15 +146,15 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.TeamKun.CommandLib</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>0.3.1</version>
+            <groupId>com.github.TeamKun</groupId>
+            <artifactId>ConfigLib</artifactId>
+            <version>0.8.4</version>
         </dependency>
 
         <dependency>
-            <groupId>com.github.TeamKun.ConfigLib</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>0.11.3</version>
+            <groupId>dev.kotx</groupId>
+            <artifactId>flylib-reloaded</artifactId>
+            <version>0.5.0</version>
         </dependency>
     </dependencies>
 </project>

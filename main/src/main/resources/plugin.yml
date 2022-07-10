@@ -1,6 +1,6 @@
 name: Minigame
 version: '${project.version}'
 main: com.github.numalab.minigame.MiniGamePlugin
-api-version: 1.18
+api-version: 1.16
 authors: [ Bun133 ]
 website: https://www.numalab.net/

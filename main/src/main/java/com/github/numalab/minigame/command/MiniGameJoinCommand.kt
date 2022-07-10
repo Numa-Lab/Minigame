@@ -3,38 +3,39 @@ package com.github.numalab.minigame.command
 import com.github.numalab.minigame.MiniGame
 import com.github.numalab.minigame.MiniGamePlugin
 import com.github.numalab.minigame.util.info
-import net.kunmc.lab.commandlib.Command
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class MiniGameJoinCommand(val plugin: MiniGamePlugin) : Command("join") {
-    init {
-        argument {
-            it.literalArgument("MiniGameName", MiniGame.values().map { g -> g.displayName })
-            it.execute { c ->
-                if (c.parsedArgs.isEmpty()) {
-                    c.sender.sendMessage(com.github.numalab.minigame.util.error("MiniGameNameを指定してください"))
-                    return@execute
-                }
-                val p = c.sender
-                if (p is Player) {
-                    val game = MiniGame.values().find { g -> g.displayName == c.getParsedArg(0, String::class.java) }
-                    if (game == null) {
-                        p.sendMessage(com.github.numalab.minigame.util.error("MiniGameNameが存在しません"))
-                        return@execute
-                    } else {
-                        val queue = game.instance(plugin).queue()
-                        if (queue == null) {
-                            p.sendMessage(com.github.numalab.minigame.util.error("${game.displayName}は現在参加できません"))
-                            return@execute
-                        } else {
-                            queue.join(p)
-                            p.sendMessage(info("${game.displayName}に参加しました"))
-                        }
-                    }
+class MiniGameJoinCommand(val plugin: MiniGamePlugin) {
+    fun join(sender: CommandSender, args: Array<out String>): Boolean {
+        if (sender is Player) {
+            if (args.size == 2) {
+                val game = MiniGame.values().find { g -> g.name == args[1] }
+                if (game == null) {
+                    sender.sendMessage(com.github.numalab.minigame.util.error("MiniGameNameが存在しません"))
                 } else {
-                    c.sender.sendMessage(com.github.numalab.minigame.util.error("コマンドはプレイヤーから実行してください"))
+                    val queue = game.instance(plugin).queue()
+                    if (queue == null) {
+                        sender.sendMessage(com.github.numalab.minigame.util.error("${game.displayName}は現在参加できません"))
+                    } else {
+                        queue.join(sender)
+                        sender.sendMessage(info("${game.displayName}に参加しました"))
+                    }
                 }
+                return true
+            } else {
+                return false
             }
+        } else {
+            sender.sendMessage(com.github.numalab.minigame.util.error("コマンドはプレイヤーから実行してください"))
+            return true
+        }
+    }
+
+    fun tabComplete(sender: CommandSender, commandLabel: String, args: Array<out String>): List<String> {
+        return when (args.size) {
+            2 -> MiniGame.values().map { it.name }.filter { it.startsWith(args[1]) }
+            else -> emptyList()
         }
     }
 }
