@@ -86,6 +86,7 @@ class SimpleMiniGameQueue(
         when (state()) {
             QueueState.WaitingForPlayers -> {
                 // TODO プレイヤー不足のため時間を延長
+                getPlayers().forEach { it.sendMessage(info("プレイヤーが不足しています")) }
                 updateStartTime(plugin.server.currentTick + (startTimeInterval.valueSafe()!!.toLong()))
             }
             QueueState.Starting -> {
