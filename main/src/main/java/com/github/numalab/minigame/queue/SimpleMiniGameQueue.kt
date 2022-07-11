@@ -62,7 +62,8 @@ class SimpleMiniGameQueue(
 
     override fun cancel(p: Player) {
         queue.remove(p)
-        p.actionBar(error("キャンセルしました"), plugin)
+        p.resetActionBarHolder(plugin)
+        p.sendMessage(error("キャンセルしました"))
         updateActionBarHolder()
         p.teleport(cancelLocation.valueSafe()!!)
     }
@@ -94,12 +95,14 @@ class SimpleMiniGameQueue(
     private fun onTime() {
         when (state()) {
             QueueState.WaitingForPlayers -> {
-                // TODO プレイヤー不足のため時間を延長
-                getPlayers().forEach { it.sendMessage(info("プレイヤーが不足しています")) }
+                getPlayers().forEach {
+                    it.failSound()
+                    it.sendMessage(error("プレイヤーが不足しています"))
+                }
                 updateStartTime(plugin.server.currentTick + (startTimeInterval.valueSafe()!!.toLong()))
             }
             QueueState.Starting -> {
-                getPlayers().forEach { it.actionBar(info(""), plugin) } // ActionBarをクリア
+                getPlayers().forEach { it.resetActionBarHolder(plugin) } // ActionBarをクリア
                 onStart(getPlayers())
             }
         }

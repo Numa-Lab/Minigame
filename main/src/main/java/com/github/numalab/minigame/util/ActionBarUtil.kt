@@ -10,6 +10,8 @@ fun Player.actionBar(comp: Component, overwriteHolder: MiniGamePlugin? = null) {
     this.sendActionBar(comp)
 }
 
+fun Player.resetActionBarHolder(plugin: MiniGamePlugin) = actionBar(Component.empty(), plugin)
+
 fun Player.actionBarHold(plugin: MiniGamePlugin, comp: Component) =
     plugin.utils.actionBarHolderUtil.setHolder(this, comp)
 

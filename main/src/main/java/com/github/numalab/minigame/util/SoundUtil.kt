@@ -10,7 +10,7 @@ fun Player.playSound(soundKey: String) {
     this.playSound(sound(soundKey))
 }
 
-fun sound(soundKey: String, volume: Float = 0.0f): Sound {
+fun sound(soundKey: String, volume: Float = 1.0f): Sound {
     return Sound.sound(Key.key("minecraft:$soundKey"), Sound.Source.MASTER, volume, 0.0f)
 }
 
@@ -20,3 +20,4 @@ fun Player.playNote(note: Note, ins: Instrument = Instrument.PIANO) {
 }
 
 fun Player.noticeSound() = playNote(Note(1))
+fun Player.failSound() = playSound("block.dispenser.fail")
