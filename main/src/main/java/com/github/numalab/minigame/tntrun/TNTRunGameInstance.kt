@@ -3,6 +3,7 @@ package com.github.numalab.minigame.tntrun
 import com.github.numalab.minigame.MiniGamePlugin
 import com.github.numalab.minigame.instance.SimpleMiniGameInstance
 import com.github.numalab.minigame.util.info
+import com.github.numalab.minigame.util.noticeSound
 import com.github.numalab.minigame.util.text
 import net.kyori.adventure.title.Title
 import org.bukkit.entity.Player
@@ -19,6 +20,7 @@ class TNTRunGameInstance(val plugin: MiniGamePlugin, override val players: List<
     override fun onStart() {
         players.forEach {
             it.showTitle(Title.title(text("TNTRun開始!"), text("人数: ${players.size}")))
+            it.noticeSound()
         }
     }
 }

@@ -2,8 +2,7 @@ package com.github.numalab.minigame.queue
 
 import com.github.numalab.minigame.MiniGamePlugin
 import com.github.numalab.minigame.config.SimpleQueueConfig
-import com.github.numalab.minigame.util.info
-import com.github.numalab.minigame.util.valueSafe
+import com.github.numalab.minigame.util.*
 import net.kunmc.lab.configlib.value.IntegerValue
 import net.kunmc.lab.configlib.value.LocationValue
 import org.bukkit.entity.Player
@@ -28,6 +27,14 @@ class SimpleMiniGameQueue(
     )
 
 
+    private var startTimeLong: Long = -1L
+    override fun startTime(): Long? {
+        if (startTimeLong == -1L) {
+            return null
+        }
+        return startTimeLong
+    }
+
     init {
         updateStartTime(plugin.server.currentTick + (startTimeInterval.valueSafe()!!.toLong()))
     }
@@ -46,12 +53,17 @@ class SimpleMiniGameQueue(
         queue.add(p)
         p.teleport(joinLocation.valueSafe()!!)
         p.inventory.clear()
+        p.noticeSound()
+        updateActionBarHolder()
+        p.actionBar(info("参加しました"))
         // TODO Give Cancel Item, etc.
         return true
     }
 
     override fun cancel(p: Player) {
         queue.remove(p)
+        p.actionBar(error("キャンセルしました"), plugin)
+        updateActionBarHolder()
         p.teleport(cancelLocation.valueSafe()!!)
     }
 
@@ -70,13 +82,6 @@ class SimpleMiniGameQueue(
         }, to - plugin.server.currentTick)
     }
 
-    private var startTimeLong: Long = -1L
-    override fun startTime(): Long? {
-        if (startTimeLong == -1L) {
-            return null
-        }
-        return startTimeLong
-    }
 
     override fun getPlayers(): List<Player> {
         return queue.toList().filter { it.isOnline }
@@ -94,8 +99,19 @@ class SimpleMiniGameQueue(
                 updateStartTime(plugin.server.currentTick + (startTimeInterval.valueSafe()!!.toLong()))
             }
             QueueState.Starting -> {
+                getPlayers().forEach { it.actionBar(info(""), plugin) } // ActionBarをクリア
                 onStart(getPlayers())
             }
+        }
+    }
+
+    private fun updateActionBarHolder() {
+        val size = getPlayers().size
+        val time = (startTime()!! - plugin.server.currentTick) / 20
+        if (size < minPlayers()) {
+            getPlayers().forEach { it.actionBarHold(plugin, info("参加を待っています [$size/${minPlayers()}]")) }
+        } else {
+            getPlayers().forEach { it.actionBarHold(plugin, info("開始を待っています [${time}秒]")) } // TODO Update Time Interval
         }
     }
 }

@@ -7,6 +7,7 @@ import org.bukkit.plugin.Plugin
 
 class MiniGameConfig(plugin: Plugin) : BaseConfig(plugin), ConfigCommandBuildable {
     val tntRun = TNTRunConfig(plugin)
+    val utilConfig = UtilConfig(plugin)
 
     override fun build(): ConfigCommand {
         return ConfigCommandBuilder(this)
