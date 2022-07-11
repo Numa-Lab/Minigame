@@ -3,8 +3,11 @@ package com.github.numalab.minigame.queue
 import org.bukkit.entity.Player
 
 interface MiniGameQueue {
-    // キューにプレイヤーを追加する
-    fun join(p: Player)
+    /**
+     * キューにプレイヤーを追加する
+     * @return 追加に成功したかどうか(もうすでにキューに入っている場合はfalse)
+     */
+    fun join(p: Player) : Boolean
 
     // キューからプレイヤーを削除する
     fun cancel(p: Player)

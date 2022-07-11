@@ -3,7 +3,6 @@ package com.github.numalab.minigame.queue
 import com.github.numalab.minigame.MiniGamePlugin
 import com.github.numalab.minigame.config.SimpleQueueConfig
 import com.github.numalab.minigame.util.info
-import com.github.numalab.minigame.util.text
 import com.github.numalab.minigame.util.valueSafe
 import net.kunmc.lab.configlib.value.IntegerValue
 import net.kunmc.lab.configlib.value.LocationValue
@@ -35,15 +34,20 @@ class SimpleMiniGameQueue(
 
     private val queue = mutableListOf<Player>()
 
-    override fun join(p: Player) {
+    override fun join(p: Player): Boolean {
         if (getPlayers().size > maxPlayers()) {
             p.sendMessage(info("満員です"))
-            return
+            return false
+        }
+        if (queue.contains(p)) {
+            p.sendMessage(info("すでに参加しています"))
+            return false
         }
         queue.add(p)
         p.teleport(joinLocation.valueSafe()!!)
         p.inventory.clear()
         // TODO Give Cancel Item, etc.
+        return true
     }
 
     override fun cancel(p: Player) {

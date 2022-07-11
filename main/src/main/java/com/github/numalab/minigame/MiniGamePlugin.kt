@@ -2,6 +2,8 @@ package com.github.numalab.minigame
 
 import com.github.numalab.minigame.command.MiniGameCommand
 import com.github.numalab.minigame.config.MiniGameConfig
+import dev.kotx.flylib.flyLib
+import net.kunmc.lab.configlib.ConfigCommandBuilder
 import org.bukkit.plugin.java.JavaPlugin
 
 class MiniGamePlugin : JavaPlugin() {
@@ -11,7 +13,10 @@ class MiniGamePlugin : JavaPlugin() {
         config = MiniGameConfig(this)
         config.saveConfigIfAbsent()
         config.loadConfig()
-        MiniGameCommand(this)
+
+        flyLib {
+            command(MiniGameCommand(config))
+        }
     }
 
     override fun onDisable() {
